@@ -18,3 +18,13 @@ app.add_middleware(LoggingMiddleware)
 @app.get("/")
 def read_root():
     return {"Status": "Your API Work"}
+
+
+@app.post("/hello")
+def post_test(data: dict):
+    return data
+
+
+@app.get("test")
+def test():
+    return {"This is": "Test Repsonse hoho"}
