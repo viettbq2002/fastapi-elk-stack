@@ -101,8 +101,8 @@ venv.bak/
 
 # mkdocs documentation
 /site
-elasticsearch-data/
 # mypy
 .mypy_cache/
 
 .idea/*
+elasticsearch-data/
