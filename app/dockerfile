@@ -1,0 +1,17 @@
+FROM python:3.11-bookworm
+
+RUN pip install poetry
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+WORKDIR /src
+
+COPY ./pyproject.toml ./poetry.lock ./
+
+RUN touch README.md
+
+COPY . /src
+RUN poetry install  && rm -rf $POETRY_CACHE_DIR
+CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

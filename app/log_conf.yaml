@@ -1,0 +1,77 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  default:
+    "()": uvicorn.logging.DefaultFormatter
+    format: "%(asctime)s - %(levelprefix)s%(name)s - %(message)s"
+    use_colors: true
+  access:
+    "()": uvicorn.logging.AccessFormatter
+    format: "%(asctime)s - %(levelprefix)s%(name)s - %(client_addr)s - %(request_line)s - %(status_code)s"
+    use_colors: true
+  simple:
+    format: "%(asctime)s - %(name)s - %(message)s"
+
+handlers:
+  default:
+    formatter: default
+    class: logging.StreamHandler
+    stream: ext://sys.stderr
+  access:
+    formatter: access
+    class: logging.StreamHandler
+    stream: ext://sys.stdout
+  file_error:
+    formatter: default
+    class: logging.handlers.RotatingFileHandler
+    filename: app/logs/errors.log
+    maxBytes: 5242880
+    backupCount: 5
+    level: ERROR
+  file_info:
+    formatter: default
+    class: logging.handlers.RotatingFileHandler
+    filename: app/logs/info.log
+    maxBytes: 5242880
+    backupCount: 5
+    level: INFO
+  file_api:
+    formatter: simple
+    class: logging.handlers.RotatingFileHandler
+    filename: app/logs/api.log
+    maxBytes: 5242880
+    backupCount: 5
+    level: INFO
+
+loggers:
+  uvicorn.error:
+    level: INFO
+    handlers:
+      - default
+      - file_error
+    propagate: no
+  uvicorn.access:
+    level: INFO
+    handlers:
+      - access
+      - file_info
+    propagate: no
+  watchfiles.main:
+    level: WARNING
+    handlers:
+      - default
+    propagate: no
+  app_logger:
+    level: INFO
+    handlers:
+      - default
+      - file_api
+    propagate: no
+
+root:
+  level: DEBUG
+  handlers:
+    - default
+    - file_info
+    - file_error
+  propagate: no
