@@ -6,7 +6,7 @@ setup.ilm.enabled: false
 setup.template.enabled: false
 
 filebeat.inputs:
-  - type: log
+  - type: filestream
     scan_frequency: 1s
     enabled: true
     paths:
@@ -14,14 +14,12 @@ filebeat.inputs:
     fields:
       - service: fastapi-app
     fields_under_root: true
-    multiline.type: pattern
-    multiline.pattern: "^{[0-9]{4}-[0-9]{2}-[0-9]{2}"
-    multiline.negate: true
-    multiline.match: after
-    processors:
-      - decode_json_fields:
-          fields: ["message"]
-          target: "json"
+    parsers:
+      - multiline:
+          type: pattern
+          pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}'
+          negate: true
+          match: after
 
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]

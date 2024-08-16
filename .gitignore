@@ -87,6 +87,7 @@ celerybeat-schedule
 .env
 .venv
 env/
+elasticsearch-data/
 venv/
 ENV/
 env.bak/
@@ -105,4 +106,3 @@ venv.bak/
 .mypy_cache/
 
 .idea/*
-elasticsearch-data/
